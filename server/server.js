@@ -67,6 +67,23 @@ app.delete("/api/expenses/:id", (req, res) => {
     );
 });
 
+app.put("/api/expenses/:id", (req, res) => {
+    const id = Number(req.params.id);
+    const { title } = req.body;
+
+    db.run(
+        "UPDATE expenses SET title = ? WHERE id = ?",
+        [title, id],
+        function (err) {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+
+            res.json({ success: true });
+        }
+    );
+});
+
 app.listen(3001, () => {
     console.log('Server running on port 3001')
 })
