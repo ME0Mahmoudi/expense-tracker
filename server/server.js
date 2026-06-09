@@ -68,18 +68,25 @@ app.delete("/api/expenses/:id", (req, res) => {
 });
 
 app.put("/api/expenses/:id", (req, res) => {
-    const id = Number(req.params.id);
-    const { title } = req.body;
+    const { title, amount } = req.body;
 
     db.run(
-        "UPDATE expenses SET title = ? WHERE id = ?",
-        [title, id],
+        `
+      UPDATE expenses
+      SET title = ?, amount = ?
+      WHERE id = ?
+      `,
+        [title, amount, req.params.id],
         function (err) {
             if (err) {
-                return res.status(500).json({ error: err.message });
+                return res.status(500).json({
+                    error: err.message,
+                });
             }
 
-            res.json({ success: true });
+            res.json({
+                success: true,
+            });
         }
     );
 });
