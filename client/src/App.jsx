@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import ExpenseForm from "./components/ExpenseForm";
+import ExpenseItem from "./components/ExpenseItem";
 
 function App() {
   const [expenses, setExpenses] = useState([]);
@@ -57,7 +59,11 @@ function App() {
     <>
       <h1>Expense Tracker</h1>
 
-      <form
+      <ExpenseForm
+        title={title}
+        amount={amount}
+        setTitle={setTitle}
+        setAmount={setAmount}
         onSubmit={async (e) => {
           e.preventDefault();
 
@@ -82,75 +88,22 @@ function App() {
           setTitle("");
           setAmount("");
         }}
-      >
-        <input
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-
-        <input
-          placeholder="Amount"
-          type="number"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-        />
-
-        <button type="submit">
-          Add Expense
-        </button>
-      </form>
+      />
 
       <ul>
-        {expenses.map(expense => (
-          <li key={expense.id}>
-            {editingId === expense.id ? (
-              <>
-                <input
-                  value={editTitle}
-                  onChange={(e) => setEditTitle(e.target.value)}
-                />
-
-                <input
-                  type="number"
-                  value={editAmount}
-                  onChange={(e) => setEditAmount(e.target.value)}
-                />
-
-                <button onClick={() => updateExpense(expense.id)}>
-                  Save
-                </button>
-
-                <button
-                  onClick={() => {
-                    setEditingId(null)
-                    setEditTitle("")
-                    setEditAmount("")
-                  }}
-                >
-                  Cancel
-                </button>
-              </>
-            ) : (
-              <>
-                {expense.title} - ${expense.amount}
-
-                <button onClick={() => deleteExpense(expense.id)}>
-                  Delete
-                </button>
-
-                <button
-                  onClick={() => {
-                    setEditingId(expense.id);
-                    setEditTitle(expense.title);
-                    setEditAmount(expense.amount);
-                  }}
-                >
-                  Edit
-                </button>
-              </>
-            )}
-          </li>
+        {expenses.map((expense) => (
+          <ExpenseItem
+            key={expense.id}
+            expense={expense}
+            editingId={editingId}
+            editTitle={editTitle}
+            editAmount={editAmount}
+            setEditTitle={setEditTitle}
+            setEditAmount={setEditAmount}
+            setEditingId={setEditingId}
+            updateExpense={updateExpense}
+            deleteExpense={deleteExpense}
+          />
         ))}
       </ul>
     </>
