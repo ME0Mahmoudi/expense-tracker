@@ -54,11 +54,17 @@ app.post("/api/expenses", (req, res) => {
 app.delete("/api/expenses/:id", (req, res) => {
     const id = Number(req.params.id);
 
-    expenses = expenses.filter(
-        (expense) => expense.id !== id
-    );
+    db.run(
+        "DELETE FROM expenses WHERE id = ?",
+        [id],
+        function (err) {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
 
-    res.json({ success: true });
+            res.json({ success: true });
+        }
+    );
 });
 
 app.listen(3001, () => {
