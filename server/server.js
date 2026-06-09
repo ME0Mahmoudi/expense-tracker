@@ -10,44 +10,45 @@ db.serialize(() => {
         amount REAL NOT NULL
       )
     `)
-  })
+})
 
 const app = express()
 
 app.use(cors())
 app.use(express.json())
 
-let expenses = [
-    {
-        id: 1,
-        title: "Coffee",
-        amount: 5,
-    },
-    {
-        id: 2,
-        title: "Lunch",
-        amount: 12,
-    },
-];
-
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok' })
 })
 
 app.get("/api/expenses", (req, res) => {
-    res.json(expenses);
+    db.all("SELECT * FROM expenses", [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+
+        res.json(rows);
+    });
 });
 
 app.post("/api/expenses", (req, res) => {
-    const newExpense = {
-        id: Date.now(),
-        title: req.body.title,
-        amount: req.body.amount,
-    };
+    const { title, amount } = req.body;
 
-    expenses.push(newExpense);
+    db.run(
+        "INSERT INTO expenses (title, amount) VALUES (?, ?)",
+        [title, amount],
+        function (err) {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
 
-    res.status(201).json(newExpense);
+            res.status(201).json({
+                id: this.lastID,
+                title,
+                amount,
+            });
+        }
+    );
 });
 
 app.delete("/api/expenses/:id", (req, res) => {
