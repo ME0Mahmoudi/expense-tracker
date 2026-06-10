@@ -9,9 +9,6 @@ function App() {
     loadExpenses();
   }, []);
 
-  const [title, setTitle] = useState("");
-  const [amount, setAmount] = useState("");
-
   const [editingId, setEditingId] = useState(null)
   const [editTitle, setEditTitle] = useState("")
   const [editAmount, setEditAmount] = useState("")
@@ -59,36 +56,7 @@ function App() {
     <>
       <h1>Expense Tracker</h1>
 
-      <ExpenseForm
-        title={title}
-        amount={amount}
-        setTitle={setTitle}
-        setAmount={setAmount}
-        onSubmit={async (e) => {
-          e.preventDefault();
-
-          const response = await fetch(
-            "http://localhost:3001/api/expenses",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                title,
-                amount: Number(amount),
-              }),
-            }
-          );
-
-          const newExpense = await response.json();
-
-          setExpenses([...expenses, newExpense]);
-
-          setTitle("");
-          setAmount("");
-        }}
-      />
+      <ExpenseForm onExpenseAdded={loadExpenses} />
 
       <ul>
         {expenses.map((expense) => (
