@@ -5,14 +5,6 @@ import ExpenseItem from "./components/ExpenseItem";
 function App() {
   const [expenses, setExpenses] = useState([]);
 
-  useEffect(() => {
-    loadExpenses();
-  }, []);
-
-  const [editingId, setEditingId] = useState(null)
-  const [editTitle, setEditTitle] = useState("")
-  const [editAmount, setEditAmount] = useState("")
-
   const loadExpenses = () => {
     fetch("http://localhost:3001/api/expenses")
       .then(res => res.json())
@@ -20,37 +12,9 @@ function App() {
       .catch(err => console.error(err));
   };
 
-  async function deleteExpense(id) {
-    await fetch(`http://localhost:3001/api/expenses/${id}`, {
-      method: "DELETE",
-    });
-
+  useEffect(() => {
     loadExpenses();
-  }
-
-  async function updateExpense(id) {
-    try {
-      await fetch(
-        `http://localhost:3001/api/expenses/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: editTitle,
-            amount: Number(editAmount),
-          }),
-        }
-      )
-    } catch (err) {
-      console.error(err);
-
-    }
-
-    loadExpenses()
-    setEditingId(null)
-  }
+  }, []);
 
   return (
     <>
@@ -63,14 +27,7 @@ function App() {
           <ExpenseItem
             key={expense.id}
             expense={expense}
-            editingId={editingId}
-            editTitle={editTitle}
-            editAmount={editAmount}
-            setEditTitle={setEditTitle}
-            setEditAmount={setEditAmount}
-            setEditingId={setEditingId}
-            updateExpense={updateExpense}
-            deleteExpense={deleteExpense}
+            loadExpenses={loadExpenses}
           />
         ))}
       </ul>
