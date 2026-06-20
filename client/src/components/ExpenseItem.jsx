@@ -5,6 +5,8 @@ export default function ExpenseItem({
   loadExpenses,
 }) {
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const [isEditing, setIsEditing] = useState(false)
   const [editTitle, setEditTitle] = useState(expense.title)
   const [editAmount, setEditAmount] = useState(expense.amount)
@@ -12,7 +14,7 @@ export default function ExpenseItem({
   async function updateExpense(id, editTitle, editAmount) {
     try {
       await fetch(
-        `http://localhost:3001/api/expenses/${id}`,
+        `${API_URL}/api/expenses/${id}`,
         {
           method: "PUT",
           headers: {
@@ -33,7 +35,7 @@ export default function ExpenseItem({
   }
 
   async function deleteExpense(id) {
-    await fetch(`http://localhost:3001/api/expenses/${id}`, {
+    await fetch(`${API_URL}/api/expenses/${id}`, {
       method: "DELETE",
     });
 
