@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import ExpenseForm from "./components/ExpenseForm";
 import ExpenseItem from "./components/ExpenseItem";
 
+console.log("checking: console.log(import.meta.env.VITE_API_URL)");
+console.log(import.meta.env.VITE_API_URL);
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
